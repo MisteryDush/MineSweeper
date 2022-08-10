@@ -1,23 +1,35 @@
+import random
+
 HEIGHT = 4
 WIDTH = 8
 FIELD = []
+CHANCE = 30
 
 
 def main():
     populate_field()
-    len(FIELD)
     get_field()
 
 
 def get_field():
-    for i in range(HEIGHT):
-        print(''.join(FIELD[(0 + WIDTH * i):(WIDTH + WIDTH * i + 1)]))
+    for row in range(HEIGHT):
+        for col in range(WIDTH):
+            print('*' if FIELD[col + row * WIDTH].bomb else '#', end='')
+        print()
 
 
 def populate_field():
     for i in range((WIDTH * HEIGHT + 1)):
-        FIELD.append('#')
+        rint = random.randint(1, 100)
+        if rint < CHANCE:
+            cell = Cell(bomb=True)
+        else:
+            cell = Cell()
+        FIELD.append(cell)
 
+
+def get_neighbouring_bombs():
+    pass
 
 class Cell:
     def __init__(self, bomb=False):
