@@ -1,28 +1,64 @@
-import math
 import random
+from getkey import getkey, keys
 
 ROWS = 4
 COLS = 8
 FIELD = []
-CHANCE = 30
+CHANCE = 10
+choice = 0
 
 
-def main():
-    populate_field()
-    get_field()
-    get_neighbouring_bombs()
-    print()
-    get_field()
+def input_handler(key):
+    if key == "w":
+        go_up()
+    elif key == "s":
+        go_down()
+    elif key == "a":
+        go_left()
+    elif key == "d":
+        go_right()
+
+
+def go_up():
+    global choice
+    if choice > COLS - 1:
+        choice -= COLS
+
+
+def go_down():
+    global choice
+    if choice < COLS * ROWS - COLS:
+        choice += COLS
+
+
+def go_left():
+    global choice
+    if choice != 0:
+        choice -= 1
+
+
+def go_right():
+    global choice
+    if choice != ROWS * COLS - 1:
+        choice += 1
 
 
 def get_field():
+    global choice
     for row in range(ROWS):
         for col in range(COLS):
             cell = FIELD[col + row * COLS]
-            print('*' if cell.bomb else f'{cell.neighbours}', end='')
-            print('|', end='')
+            if col + row * COLS == choice:
+                if not cell.hide:
+                    print('|*|' if cell.bomb else f'|{cell.neighbours}|', end='')
+                else:
+                    print('|#|', end='')
+            else:
+                if not cell.hide:
+                    print(' * ' if cell.bomb else f' {cell.neighbours} ', end='')
+                else:
+                    print(' # ', end='')
         print()
-        print('-' * COLS * 2)
 
 
 def populate_field():
@@ -97,7 +133,12 @@ class Cell:
     def __init__(self, bomb=False):
         self.bomb = bomb
         self.neighbours = 0
+        self.hide = False
 
 
-if __name__ == '__main__':
-    main()
+populate_field()
+get_neighbouring_bombs()
+while True:
+    get_field()
+    key = getkey()
+    input_handler(key)
