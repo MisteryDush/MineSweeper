@@ -3,7 +3,7 @@ from getkey import getkey, keys
 import os
 from shutil import get_terminal_size
 
-ROWS = 4
+ROWS = 8
 COLS = 8
 FIELD = []
 CHANCE = 20
@@ -14,7 +14,7 @@ lose = False
 
 def restart_game():
     global restart, lose, FIELD
-    choice = input('Restart game? Y/n\n >>')
+    choice = input('Restart game? Y/n\n >> ')
     if choice.lower() == 'y':
         restart = True
         FIELD = []
@@ -31,6 +31,14 @@ def open_cell():
             os.system('cls')
             get_field()
             lose = True
+            print("""
+                        __     __             _                  _   
+                        \ \   / /            | |                | |  
+                         \ \_/ /___   _   _  | |      ___   ___ | |_ 
+                          \   // _ \ | | | | | |     / _ \ / __|| __|
+                           | || (_) || |_| | | |____| (_) |\__ \| |_ 
+                           |_| \___/  \__,_| |______|\___/ |___/ \__|
+                           """)
             restart_game()
 
 
@@ -54,6 +62,8 @@ def input_handler(key):
         open_cell()
     elif key == "f":
         flag_cell()
+    elif key == keys.ESC:
+        quit()
 
 
 def go_up():
@@ -82,7 +92,6 @@ def go_right():
 
 def get_field():
     global choice, columns, lines
-    print('\n' * (int(lines * 0.2)))
     for row in range(ROWS):
         output = ''
         for col in range(COLS):
@@ -180,14 +189,8 @@ class Cell:
         self.flagged = False
 
 
-while True:
-    os.system('cls')
-    populate_field()
-    get_neighbouring_bombs()
-    columns = get_terminal_size().columns
-    lines = get_terminal_size().lines
-    while True:
-        print("""
+def print_name():
+    print("""
       __  __   _                   _____                                                
      |  \/  | (_)                 / ____|                                               
      | \  / |  _   _ __     ___  | (___   __      __   ___    ___   _ __     ___   _ __ 
@@ -197,6 +200,28 @@ while True:
                                                                    | |                  
                                                                    |_|                  
     """.center(columns))
+
+
+def print_controls():
+    print("""
+    w - up
+    s - down
+    a - left
+    d - right
+    space/enter - open cell
+    f - flag cell
+    esc - exit""")
+
+
+while True:
+    os.system('cls')
+    populate_field()
+    get_neighbouring_bombs()
+    columns = get_terminal_size().columns
+    lines = get_terminal_size().lines
+    while True:
+        print_name()
+        print_controls()
         get_field()
         key = getkey()
         input_handler(key)
@@ -207,3 +232,35 @@ while True:
         break
     lose = False
 
+"""
+                              `-:/+++++++/++:-.                                          
+                            .odNMMMMMMMMMMMMMNmdo-`                                      
+                           +mMMNmdhhhhhhhhhdmNMMMNd/`                                    
+                          sMMMmhyyyyyyyyyyyyyyhmNMMMh-                                   
+                         +MMMdyyyyyyyhhhhdddddddmMMMMN/                                  
+                        `NMMmyyyyyymNNMMNNNmmmmmmmNNMMMy`                                
+                        :MMMhyyyyyNMMMho+//:-.....-:omMMd-                               
+                    ```:mMMNhyyyyhMMMh+::::-        `:sNMN:                              
+                 -oyhdmMMMMmhyyyyhMMNyy+::::---------::yMMm                              
+                +MMMMNNNMMMdhyyyyhMMNyyyso/::::::://+oshMMM`                             
+                NMMNhyyyMMMhhyyyyyNMMmyyyyyyssssyyyyyyymMMd                              
+                MMMdyyyhMMNhhyyyyyhNMMNdyyyyyyyyyyyhdmMMMN-                              
+                MMMdhhhdMMNhhhyyyyyymMMMMNmmmmmmNNMMMMMMN.                               
+                MMMhhhhdMMNhhhyyyyyyyhdmNNNMMNNNmmdhhdMMd                                
+               `MMMhhhhdMMNhhhhyyyyyyyyyyyyyyyyyyyyyydMMM.                               
+               .MMMhhhhdMMNhhhhyyyyyyyyyyyyyyyyyyyyyydMMM:                               
+               .MMNhhhhdMMNhhhhhyyyyyyyyyyyyyyyyyyyyhhMMM+                               
+               -MMNhhhhdMMNhhhhhyyyyyyyyyyyyyyyyyyyyhdMMM/                               
+               -MMMhhhhdMMNhhhhhhhyyyyyyyyyyyyyyyyyhhdMMM-                               
+               `MMMhhhhhMMNhhhhhhhhhhyyyyyyyyyyyhhhhhmMMN                                
+                hMMmhhhhMMNhhhhhhhhhhhhhhhhhhhhhhhhhhNMMy                                
+                :MMMNmddMMMhhhhhhhhhhddddhhhhhhhhhhhdMMM/                                
+                 :hNMMMMMMMdhhhhhhhhdMMMMMMNNNNNdhhhNMMN`                                
+                   .-/+oMMMmhhhhhhhhmMMmyhMMMddhhhhdMMMy                                 
+                        hMMNhhhhhhhhmMMd :MMMhhhhhhdMMM+                                 
+                        sMMNhhhhhhhhNMMm .MMMdhhhhhdMMN.                                 
+                        /MMMdhhhhhhdMMM+  oNMMNNNNNMMm:                                  
+                        `dMMMNmmmNNMMMh`   -syyyyhhy/`                                   
+                         `/hmNNNNNmdh/`                                                  
+                            `.---..`
+"""
