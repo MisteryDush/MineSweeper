@@ -14,6 +14,13 @@
 ![MineSweeper_Demo](https://user-images.githubusercontent.com/48157106/188101696-3f69c437-9a7e-4e52-b0a8-2b45bca601eb.gif)
 
 
+### Future plans
+
+<ul style="font-size: 16px">
+<li>Implement win condition</li>
+<li>Let user decide number of rows and columns</li>
+</ul>
+
 ## Setting up the venv
 
 ```
