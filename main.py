@@ -1,11 +1,44 @@
 import random
 from getkey import getkey, keys
+import os
+from shutil import get_terminal_size
 
 ROWS = 4
 COLS = 8
 FIELD = []
-CHANCE = 10
+CHANCE = 20
 choice = 0
+restart = True
+lose = False
+
+
+def restart_game():
+    global restart, lose, FIELD
+    choice = input('Restart game? Y/n\n >>')
+    if choice.lower() == 'y':
+        restart = True
+        FIELD = []
+    else:
+        restart = False
+
+
+def open_cell():
+    global choice, lose
+    cell = FIELD[choice]
+    if cell.hide:
+        cell.hide = False
+        if cell.bomb:
+            os.system('cls')
+            get_field()
+            lose = True
+            restart_game()
+
+
+def flag_cell():
+    global choice
+    cell = FIELD[choice]
+    if cell.hide:
+        cell.flagged = True
 
 
 def input_handler(key):
@@ -17,6 +50,10 @@ def input_handler(key):
         go_left()
     elif key == "d":
         go_right()
+    elif key == keys.ENTER or key == keys.SPACE:
+        open_cell()
+    elif key == "f":
+        flag_cell()
 
 
 def go_up():
@@ -44,21 +81,27 @@ def go_right():
 
 
 def get_field():
-    global choice
+    global choice, columns, lines
+    print('\n' * (int(lines * 0.2)))
     for row in range(ROWS):
+        output = ''
         for col in range(COLS):
             cell = FIELD[col + row * COLS]
             if col + row * COLS == choice:
                 if not cell.hide:
-                    print('|*|' if cell.bomb else f'|{cell.neighbours}|', end='')
+                    output += '|*|' if cell.bomb else f'|{cell.neighbours}|'
+                elif cell.flagged:
+                    output += ' F '
                 else:
-                    print('|#|', end='')
+                    output += '|#|'
             else:
                 if not cell.hide:
-                    print(' * ' if cell.bomb else f' {cell.neighbours} ', end='')
+                    output += ' * ' if cell.bomb else f' {cell.neighbours} '
+                elif cell.flagged:
+                    output += ' F '
                 else:
-                    print(' # ', end='')
-        print()
+                    output += ' # '
+        print(output.center(columns))
 
 
 def populate_field():
@@ -133,12 +176,34 @@ class Cell:
     def __init__(self, bomb=False):
         self.bomb = bomb
         self.neighbours = 0
-        self.hide = False
+        self.hide = True
+        self.flagged = False
 
 
-populate_field()
-get_neighbouring_bombs()
 while True:
-    get_field()
-    key = getkey()
-    input_handler(key)
+    os.system('cls')
+    populate_field()
+    get_neighbouring_bombs()
+    columns = get_terminal_size().columns
+    lines = get_terminal_size().lines
+    while True:
+        print("""
+      __  __   _                   _____                                                
+     |  \/  | (_)                 / ____|                                               
+     | \  / |  _   _ __     ___  | (___   __      __   ___    ___   _ __     ___   _ __ 
+     | |\/| | | | | '_ \   / _ \  \___ \  \ \ /\ / /  / _ \  / _ \ | '_ \   / _ \ | '__|
+     | |  | | | | | | | | |  __/  ____) |  \ V  V /  |  __/ |  __/ | |_) | |  __/ | |   
+     |_|  |_| |_| |_| |_|  \___| |_____/    \_/\_/    \___|  \___| | .__/   \___| |_|   
+                                                                   | |                  
+                                                                   |_|                  
+    """.center(columns))
+        get_field()
+        key = getkey()
+        input_handler(key)
+        os.system('cls')
+        if lose:
+            break
+    if not restart:
+        break
+    lose = False
+
