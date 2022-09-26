@@ -3,13 +3,14 @@ from getkey import getkey, keys
 import os
 from shutil import get_terminal_size
 
-ROWS = 8
-COLS = 8
+ROWS = 3
+COLS = 3
 FIELD = []
 CHANCE = 20
 choice = 0
 restart = True
 lose = False
+victory = False
 
 
 def restart_game():
@@ -40,6 +41,26 @@ def open_cell():
                            |_| \___/  \__,_| |______|\___/ |___/ \__|
                            """)
             restart_game()
+
+
+def is_victory():
+    global victory
+    b = 0
+    flagged_tp = 0
+    flagged_fn = 0
+    f = FIELD
+    for cell in f:
+        if cell.bomb:
+            b += 1
+            if cell.flagged:
+                flagged_tp += 1
+        else:
+            if cell.flagged:
+                flagged_fn += 1
+    if flagged_tp == b and flagged_fn == 0:
+        victory = True
+    else:
+        victory = False
 
 
 def flag_cell():
@@ -100,7 +121,7 @@ def get_field():
                 if not cell.hide:
                     output += '|*|' if cell.bomb else f'|{cell.neighbours}|'
                 elif cell.flagged:
-                    output += ' F '
+                    output += '|F|'
                 else:
                     output += '|#|'
             else:
@@ -114,7 +135,7 @@ def get_field():
 
 
 def populate_field():
-    for i in range((COLS * ROWS + 1)):
+    for i in range((COLS * ROWS)):
         rint = random.randint(1, 100)
         if rint < CHANCE:
             cell = Cell(bomb=True)
@@ -216,6 +237,12 @@ def print_controls():
     esc - exit""")
 
 
+def display_win_message():
+    # TODO: Finish ASCII
+    os.system('cls')
+    print('You Won!')
+
+
 while True:
     os.system('cls')
     populate_field()
@@ -228,11 +255,17 @@ while True:
         get_field()
         key = getkey()
         input_handler(key)
-        os.system('cls')
-        if lose:
+        if victory:
+            display_win_message()
+            restart_game()
             break
+        else:
+            os.system('cls')
+            if lose:
+                break
     if not restart:
         break
+    victory = False
     lose = False
 
 """
