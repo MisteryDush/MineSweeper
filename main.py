@@ -129,11 +129,11 @@ def get_neighbouring_bombs():
             cell = FIELD[col + row * COLS]
             if not cell.bomb:
                 cell_index = FIELD.index(cell)
-                upper_cell_index = cell_index - 8 if cell_index - 8 > 1 else 0
-                lower_cell_index = ROWS * COLS if cell_index + 8 > len(FIELD) else cell_index + 8
+                upper_cell_index = cell_index - COLS if cell_index - COLS >= 1 else 0
+                lower_cell_index = ROWS * COLS if cell_index + COLS > len(FIELD) else cell_index + COLS
                 if cell_index % COLS == 0:
                     try:
-                        if upper_cell_index > 2:
+                        if cell_index >= COLS:
                             for i in range(0, 2):
                                 if FIELD[upper_cell_index + i].bomb:
                                     cell.neighbours += 1
@@ -142,14 +142,15 @@ def get_neighbouring_bombs():
                                 continue
                             elif FIELD[cell_index + i].bomb:
                                 cell.neighbours += 1
-                        for i in range(0, 2):
-                            if FIELD[lower_cell_index + i].bomb:
-                                cell.neighbours += 1
+                        if cell_index < len(FIELD) - COLS:
+                            for i in range(0, 2):
+                                if FIELD[lower_cell_index + i].bomb:
+                                    cell.neighbours += 1
                     except:
                         pass
                 elif cell_index % COLS == COLS - 1:
                     try:
-                        if upper_cell_index > 2:
+                        if cell_index >= COLS:
                             for i in range(-1, 1):
                                 if FIELD[upper_cell_index + i].bomb:
                                     cell.neighbours += 1
@@ -158,14 +159,15 @@ def get_neighbouring_bombs():
                                 continue
                             elif FIELD[cell_index + i].bomb:
                                 cell.neighbours += 1
-                        for i in range(-1, 1):
-                            if FIELD[lower_cell_index + i].bomb:
-                                cell.neighbours += 1
+                        if cell_index < len(FIELD) - COLS:
+                            for i in range(-1, 1):
+                                if FIELD[lower_cell_index + i].bomb:
+                                    cell.neighbours += 1
                     except:
                         pass
                 else:
                     try:
-                        if upper_cell_index > 2:
+                        if cell_index >= COLS:
                             for i in range(-1, 2):
                                 if FIELD[upper_cell_index + i].bomb:
                                     cell.neighbours += 1
@@ -174,9 +176,10 @@ def get_neighbouring_bombs():
                                 continue
                             elif FIELD[cell_index + i].bomb:
                                 cell.neighbours += 1
-                        for i in range(-1, 2):
-                            if FIELD[lower_cell_index + i].bomb:
-                                cell.neighbours += 1
+                        if cell_index < len(FIELD) - COLS:
+                            for i in range(-1, 2):
+                                if FIELD[lower_cell_index + i].bomb:
+                                    cell.neighbours += 1
                     except:
                         pass
 
