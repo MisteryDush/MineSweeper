@@ -68,6 +68,7 @@ def flag_cell():
     cell = FIELD[choice]
     if cell.hide:
         cell.flagged = True
+    is_victory()
 
 
 def input_handler(key):
