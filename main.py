@@ -252,8 +252,34 @@ def display_win_message():
 """)
 
 
+def setting_up():
+    global ROWS, COLS, CHANCE
+    print('How many rows do you want? Default: 5')
+    try:
+        ROWS = int(input('>>> '))
+        if ROWS > 25 or ROWS <= 0:
+            ROWS = 5
+    except ValueError:
+        ROWS = 5
+    print('How many columns do you want? Default: 5')
+    try:
+        COLS = int(input('>>> '))
+        if COLS > 25 or COLS <= 0:
+            COLS = 5
+    except ValueError:
+        COLS = 5
+    print('Percentage of bombs on the field? Default: 30')
+    try:
+        CHANCE = int(input('>>> '))
+        if CHANCE <= 0 or CHANCE >= 100:
+            CHANCE = 30
+    except ValueError:
+        CHANCE = 30
+
+
 while True:
     os.system('cls')
+    setting_up()
     populate_field()
     get_neighbouring_bombs()
     columns = get_terminal_size().columns
