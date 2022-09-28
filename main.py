@@ -3,8 +3,8 @@ from getkey import getkey, keys
 import os
 from shutil import get_terminal_size
 
-ROWS = 3
-COLS = 3
+ROWS = 8
+COLS = 8
 FIELD = []
 CHANCE = 20
 choice = 0
@@ -239,9 +239,17 @@ def print_controls():
 
 
 def display_win_message():
-    # TODO: Finish ASCII
     os.system('cls')
-    print('You Won!')
+    print("""
+ __     __          __          __         
+ \ \   / /          \ \        / /         
+  \ \_/ /__  _   _   \ \  /\  / /__  _ __  
+   \   / _ \| | | |   \ \/  \/ / _ \| '_ \ 
+    | | (_) | |_| |    \  /\  / (_) | | | |
+    |_|\___/ \__,_|     \/  \/ \___/|_| |_|
+                                           
+                                           
+""")
 
 
 while True:
